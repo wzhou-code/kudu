@@ -165,7 +165,6 @@ set(UTIL_SRCS
   block_bloom_filter.cc
   bloom_filter.cc
   cache.cc
-  char_util.cc
   coding.cc
   condition_variable.cc
   cow_object.cc
@@ -258,26 +257,26 @@ set(UTIL_SRCS
 set_source_files_properties(memory/overwrite.cc PROPERTIES COMPILE_FLAGS "-O3")
 
 # Detect AVX2 support
-set(AVX2_CMD "echo | ${CMAKE_CXX_COMPILER} -mavx2 -dM -E - | awk '$2 == \"__AVX2__\" { print $3 }'")
-execute_process(
-  COMMAND bash -c ${AVX2_CMD}
-  OUTPUT_VARIABLE AVX2_SUPPORT
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-
-# block_bloom_filter_avx2.cc uses AVX2 operations.
-if (AVX2_SUPPORT)
-  list(APPEND UTIL_SRCS block_bloom_filter_avx2.cc)
-  set_source_files_properties(block_bloom_filter_avx2.cc PROPERTIES COMPILE_FLAGS "-mavx2")
-  # block_bloom_filter.cc is not compiled explicitly with AVX2 instructions(-mavx2) but it needs
-  # to know at compile time whether AVX2 support is available, hence the custom definition
-  # instead of relying on __AVX2__ defined by compiler with -mavx2.
-  set_source_files_properties(block_bloom_filter_avx2.cc block_bloom_filter.cc
-                              PROPERTIES COMPILE_DEFINITIONS "USE_AVX2=1")
-  message("Compiler supports AVX2")
-else()
-  message("Compiler does not support AVX2")
-endif()
+#set(AVX2_CMD "echo | ${CMAKE_CXX_COMPILER} -mavx2 -dM -E - | awk '$2 == \"__AVX2__\" { print $3 }'")
+#execute_process(
+#  COMMAND bash -c ${AVX2_CMD}
+#  OUTPUT_VARIABLE AVX2_SUPPORT
+#  OUTPUT_STRIP_TRAILING_WHITESPACE
+#)
+#
+## block_bloom_filter_avx2.cc uses AVX2 operations.
+#if (AVX2_SUPPORT)
+#  list(APPEND UTIL_SRCS block_bloom_filter_avx2.cc)
+#  set_source_files_properties(block_bloom_filter_avx2.cc PROPERTIES COMPILE_FLAGS "-mavx2")
+#  # block_bloom_filter.cc is not compiled explicitly with AVX2 instructions(-mavx2) but it needs
+#  # to know at compile time whether AVX2 support is available, hence the custom definition
+#  # instead of relying on __AVX2__ defined by compiler with -mavx2.
+#  set_source_files_properties(block_bloom_filter_avx2.cc block_bloom_filter.cc
+#                              PROPERTIES COMPILE_DEFINITIONS "USE_AVX2=1")
+#  message("Compiler supports AVX2")
+#else()
+#  message("Compiler does not support AVX2")
+#endif()
 
 set(UTIL_LIBS
   block_bloom_filter_proto
@@ -439,8 +438,6 @@ ADD_KUDU_TEST(block_bloom_filter-test)
 ADD_KUDU_TEST(bloom_filter-test)
 ADD_KUDU_TEST(cache-bench RUN_SERIAL true)
 ADD_KUDU_TEST(cache-test)
-ADD_KUDU_TEST(char_util-test
-  DATA_FILES testdata/char_truncate_utf8.txt testdata/char_truncate_ascii.txt)
 ADD_KUDU_TEST(countdown_latch-test)
 ADD_KUDU_TEST(crc-test RUN_SERIAL true) # has a benchmark
 ADD_KUDU_TEST(debug-util-test)

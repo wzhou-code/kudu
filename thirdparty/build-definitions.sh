@@ -761,8 +761,8 @@ build_crcutil() {
   rsync -av --delete $CRCUTIL_SOURCE/ .
   ./autogen.sh
 
-  CFLAGS="$EXTRA_CFLAGS" \
-    CXXFLAGS="$EXTRA_CXXFLAGS" \
+  CFLAGS="$EXTRA_CFLAGS -DCRCUTIL_USE_MM_CRC32=0" \
+    CXXFLAGS="$EXTRA_CXXFLAGS -DCRCUTIL_USE_MM_CRC32=0" \
     LDFLAGS="$EXTRA_LDFLAGS" \
     LIBS="$EXTRA_LIBS" \
     ./configure \

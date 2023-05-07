@@ -33,6 +33,7 @@ const char Bits::num_bits[] = {
 int Bits::Count(const void *m, int num_bytes) {
   int nbits = 0;
   const uint8 *s = static_cast<const uint8*>(m);
+#if 0
 #ifdef __x86_64__
   // Assume POPCNT since Kudu checks for it at startup.
   while (num_bytes >= 8) {
@@ -49,6 +50,10 @@ int Bits::Count(const void *m, int num_bytes) {
     nbits += num_bits[*s++];
   }
 #endif
+#endif
+  for (int i = 0; i < num_bytes; i++) {
+    nbits += num_bits[*s++];
+  }
   return nbits;
 }
 

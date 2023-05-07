@@ -202,7 +202,7 @@ Status KuduPartialRow::Set(int32_t column_idx, const uint8_t* val) {
       break;
     }
     case VARCHAR: {
-      RETURN_NOT_OK(SetVarchar(column_idx, *reinterpret_cast<const Slice*>(val)));
+      return Status::NotSupported("VARCHAR support isn't available in this build");
       break;
     }
     case UNIXTIME_MICROS: {
@@ -379,7 +379,7 @@ Status KuduPartialRow::SetString(int col_idx, const Slice& val) {
   return SetStringCopy(col_idx, val);
 }
 Status KuduPartialRow::SetVarchar(int col_idx, const Slice& val) {
-  return SetSliceCopy<TypeTraits<VARCHAR> >(col_idx, val);
+  return Status::NotSupported("VARCHAR support isn't available in this build");
 }
 
 Status KuduPartialRow::SetBinaryCopy(const Slice& col_name, const Slice& val) {
@@ -437,7 +437,7 @@ Status KuduPartialRow::SetSliceCopy(int col_idx, const Slice& val) {
   Slice relocated_val;
   switch (T::type) {
     case VARCHAR:
-      relocated_val = UTF8Truncate(val, col.type_attributes().length);
+      return Status::NotSupported("VARCHAR support isn't available in this build");
       break;
     case STRING:
     case BINARY:

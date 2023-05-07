@@ -35,12 +35,15 @@ class Bits {
   // Doesn't check if the instruction exists.
   // Please use TestCPUFeature(POPCNT) from base/cpuid/cpuid.h before using this.
   static inline int CountOnes64withPopcount(uint64 n) {
+    return CountOnes64(n);
+#if 0
 #if defined(__x86_64__) && defined __GNUC__
     int64 count = 0;
     asm("popcnt %1,%0" : "=r"(count) : "rm"(n) : "cc");
     return count;
 #else
     return CountOnes64(n);
+#endif
 #endif
   }
 

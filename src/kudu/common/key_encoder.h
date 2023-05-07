@@ -246,6 +246,8 @@ struct KeyEncoderTraits<BINARY, Buffer> {
   // REQUIRES: len == 16 or 8
   template<int LEN>
   static bool SSEEncodeChunk(const uint8_t** srcp, uint8_t** dstp) {
+    return false;
+#if 0
     #ifdef __aarch64__
     return false;
     #else
@@ -286,6 +288,7 @@ struct KeyEncoderTraits<BINARY, Buffer> {
     *srcp += LEN;
     return true;
     #endif //__aarch64__
+#endif
   }
 
   // Non-SSE loop which encodes 'len' bytes from 'srcp' into 'dst'.
